@@ -6,7 +6,7 @@
         {
             "matches": ["http://fotostrana.ru/*", "https://fotostrana.ru/*"],
             "js": ["jquery.js", "background.js"],
-            "run_at": "document_end"
+            "run_at": "document_idle"
         }
     ],
     "web_accessible_resources": [

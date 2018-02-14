@@ -18,12 +18,14 @@ var photoland = {
         setInterval(function () {
             var url = window.location.href;
             if (url !== photoland.initial_url) {
+                photoland.initial_url = url;
                 photoland.run();
             }
         }, 1000);
     },
     run: function () {
         $('#' + this.plugin_wrap).remove();
+        this.init_functions = [];
         $('body').append("<div id='" + this.plugin_wrap + "' style='position:fixed; top:50px; left:5px; z-index:1000000;'></div>");
 
         this.registerInitFunction(this.golosovanie.init);
@@ -40,7 +42,7 @@ var photoland = {
     },
     user: {
         init: function () {
-            if ($("#add-friend").length > 0) {
+            if ($("#add-friend").length > 0 && $("#remove-friend").css("display") !== "block") {
                 photoland.user.addFriend();
             }
         },
@@ -53,12 +55,20 @@ var photoland = {
     golosovanie: {
         init: function () {
             if (window.location.href.indexOf("/contest/") > -1) {
-                photoland.header_btn('Голосование on', 'golos', photoland.golosovanie.start);
+                photoland.golosovanie.button();
             }
         },
         id: undefined,
+        state: false,
+        button: function () {
+            if (this.state) {
+                photoland.header_btn('Не голосовать', 'golos', photoland.golosovanie.stop);
+            } else {
+                photoland.header_btn('Голосовать', 'golos', photoland.golosovanie.start);
+            }
+        },
         start: function () {
-            photoland.header_btn('Голосование off', 'golos', photoland.golosovanie.stop);
+            this.state = true;
             this.id = setInterval(function () {
                 var btn = $("div.contest-popup-buttons-container.js-contest-buttons-container.contest-all-buttons > button");
                 if ($(btn).prop("disabled")) {
@@ -69,21 +79,29 @@ var photoland = {
             }, 1500);
         },
         stop: function () {
-            photoland.header_btn('Голосование on', 'golos', photoland.golosovanie.start);
             if (this.id !== undefined) {
                 clearInterval(this.id);
+                this.state = false;
             }
         }
     },
     vstrechi: {
         init: function () {
             if (window.location.href.indexOf("/meeting/") > -1) {
-                photoland.header_btn('Встречи on', 'vstr', photoland.vstrechi.start);
+                photoland.vstrechi.button();
             }
         },
         id: undefined,
+        state: false,
+        button: function () {
+            if (this.state) {
+                photoland.header_btn('Встречи off', 'vstr', photoland.vstrechi.stop);
+            } else {
+                photoland.header_btn('Встречи on', 'vstr', photoland.vstrechi.start);
+            }
+        },
         start: function () {
-            photoland.header_btn('Встречи off', 'vstr', photoland.vstrechi.stop);
+            this.state = true;
             this.id = setInterval(function () {
                 if ($(".meet-ic.m-close-w.mpopup-close.mtrans").length > 0) {
                     $(".meet-ic.m-close-w.mpopup-close.mtrans").click();
@@ -96,7 +114,7 @@ var photoland = {
             }, 1500);
         },
         stop: function () {
-            photoland.header_btn('Встречи on', 'vstr', photoland.vstrechi.start);
+            this.state = false;
             if (this.id !== undefined) {
                 clearInterval(this.id);
             }
@@ -105,12 +123,20 @@ var photoland = {
     like: {
         init: function () {
             if ((window.location.href.indexOf("/albums/") > -1 || window.location.href.indexOf("/album/") > -1) && $(".photo-info-like-bg:not(.on)").length > 0) {
-                photoland.header_btn('Пролайкать', 'liker', photoland.like.all);
+                photoland.like.button();
             }
         },
         id: undefined,
+        state: false,
+        button: function () {
+            if (this.state) {
+                photoland.header_btn('Лакается...', 'liker', function () {});
+            } else {
+                photoland.header_btn('Пролайкать', 'liker', photoland.like.all);
+            }
+        },
         all: function () {
-            photoland.header_btn('Лакается...', 'liker', function () {});
+            this.state = true;
             this.id = setInterval(function () {
                 if ($(".photo-info-like-bg:not(.on)").length > 0) {
                     $(".photo-info-like-bg:not(.on)")[0].click();
@@ -120,6 +146,7 @@ var photoland = {
             }, 500);
         },
         clear: function () {
+            this.state = false;
             clearInterval(photoland.like.id);
             $("#liker").remove();
         }
@@ -127,12 +154,20 @@ var photoland = {
     litsoSOblogki: {
         init: function () {
             if (window.location.href.indexOf("/rating/") > -1) {
-                photoland.header_btn('Лицо с обложки on', 'litso', photoland.litsoSOblogki.start);
+                photoland.litsoSOblogki.button();
             }
         },
         id: undefined,
+        state: false,
+        button: function () {
+            if (this.state) {
+                photoland.header_btn('Лицо с обложки off', 'litso', photoland.litsoSOblogki.stop);
+            } else {
+                photoland.header_btn('Лицо с обложки on', 'litso', photoland.litsoSOblogki.start);
+            }
+        },
         start: function () {
-            photoland.header_btn('Лицо с обложки off', 'litso', photoland.litsoSOblogki.stop);
+            this.state = true;
             this.id = setInterval(function () {
                 var check = $("#fsr-photo-like-fs.active");
                 if ($(check).length > 0) {
@@ -144,7 +179,7 @@ var photoland = {
             }, 1500);
         },
         stop: function () {
-            photoland.header_btn('Лицо с обложки on', 'litso', photoland.litsoSOblogki.start);
+            this.state = false;
             if (this.id !== undefined) {
                 clearInterval(this.id);
             }
@@ -190,10 +225,21 @@ var photoland = {
     },
     goryatsieSerdtsa: {
         init: function () {
-
+            if(window.location.href.indexOf("/hothearts/") > -1){
+                photoland.goryatsieSerdtsa.button();
+            }
         },
         id: undefined,
+        state: false,
+        button: function () {
+            if (this.state) {
+                photoland.header_btn('Горячие сердца off', 'goryatsieSerdtsa', photoland.goryatsieSerdtsa.stop);
+            } else {
+                photoland.header_btn('Горячие сердца on', 'goryatsieSerdtsa', photoland.goryatsieSerdtsa.start);
+            }
+        },
         start: function () {
+            this.state = true;
             this.id = setInterval(function () {
                 var coast = $(".hothearts-page_send_button_cost")[0];
                 if ($(coast).text() !== "0.1 ФМ") {
@@ -204,6 +250,7 @@ var photoland = {
             }, 500);
         },
         stop: function () {
+            this.state = false;
             if (this.id !== undefined) {
                 clearInterval(this.id);
                 console.log("Stopped");
