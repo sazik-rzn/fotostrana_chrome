@@ -35,6 +35,7 @@ var photoland = {
         this.registerInitFunction(this.ludi.init);
         this.registerInitFunction(this.goryatsieSerdtsa.init);
         this.registerInitFunction(this.user.init);
+        this.registerInitFunction(this.putKSlave.init);
 
         $.each(this.init_functions, function (index, value) {
             value();
@@ -248,6 +249,50 @@ var photoland = {
                     this.stop();
                 }
             }, 500);
+        },
+        stop: function () {
+            this.state = false;
+            if (this.id !== undefined) {
+                clearInterval(this.id);
+                console.log("Stopped");
+            }
+        }
+    },
+    putKSlave: {
+        init: function () {
+            if(window.location.href.indexOf("season/fame") > -1){
+                photoland.putKSlave.button();
+            }
+        },
+        id: undefined,
+        state: false,
+        prev: 0,
+        button: function () {
+            if (this.state) {
+                photoland.header_btn('Путь к славе off', 'slava', photoland.putKSlave.stop);
+            } else {
+                photoland.header_btn('Путь к славе on', 'slava', photoland.putKSlave.start);
+            }
+        },
+        start: function () {
+            this.state = true;
+            this.id = setInterval(function () {
+                
+                if($("._skip").length > 0){
+                    $("._skip").find(".jslink").click();
+                }
+                if($('.fame2016-card_answers').find('.fame2016-card_answer').length===3){
+                    if($($('.fame2016-card_answers').find('.fame2016-card_answer')[photoland.putKSlave.prev]).find(".fame2016-card_answer_price").text() === "Бесплатно"){
+                        $($('.fame2016-card_answers').find('.fame2016-card_answer')[photoland.putKSlave.prev]).click();
+                    }
+                    if(photoland.putKSlave.prev === 2){
+                        photoland.putKSlave.prev = 0;
+                    }
+                    else{
+                        photoland.putKSlave.prev++;
+                    }
+                }
+            }, 700);
         },
         stop: function () {
             this.state = false;
