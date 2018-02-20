@@ -46,6 +46,7 @@ var photoland = {
             if ($("#add-friend").length > 0 && $("#remove-friend").css("display") !== "block") {
                 photoland.user.addFriend();
             }
+            
         },
         addFriend: function () {
             if ($("#add-friend").attr("style") !== "display: none;") {
@@ -226,7 +227,7 @@ var photoland = {
     },
     goryatsieSerdtsa: {
         init: function () {
-            if(window.location.href.indexOf("/hothearts/") > -1){
+            if (window.location.href.indexOf("/hothearts/") > -1) {
                 photoland.goryatsieSerdtsa.button();
             }
         },
@@ -260,7 +261,7 @@ var photoland = {
     },
     putKSlave: {
         init: function () {
-            if(window.location.href.indexOf("season/fame") > -1){
+            if (window.location.href.indexOf("season/fame") > -1) {
                 photoland.putKSlave.button();
             }
         },
@@ -277,18 +278,17 @@ var photoland = {
         start: function () {
             this.state = true;
             this.id = setInterval(function () {
-                
-                if($("._skip").length > 0){
+
+                if ($("._skip").length > 0) {
                     $("._skip").find(".jslink").click();
                 }
-                if($('.fame2016-card_answers').find('.fame2016-card_answer').length===3){
-                    if($($('.fame2016-card_answers').find('.fame2016-card_answer')[photoland.putKSlave.prev]).find(".fame2016-card_answer_price").text() === "Бесплатно"){
+                if ($('.fame2016-card_answers').find('.fame2016-card_answer').length === 3) {
+                    if ($($('.fame2016-card_answers').find('.fame2016-card_answer')[photoland.putKSlave.prev]).find(".fame2016-card_answer_price").text() === "Бесплатно") {
                         $($('.fame2016-card_answers').find('.fame2016-card_answer')[photoland.putKSlave.prev]).click();
                     }
-                    if(photoland.putKSlave.prev === 2){
+                    if (photoland.putKSlave.prev === 2) {
                         photoland.putKSlave.prev = 0;
-                    }
-                    else{
+                    } else {
                         photoland.putKSlave.prev++;
                     }
                 }
