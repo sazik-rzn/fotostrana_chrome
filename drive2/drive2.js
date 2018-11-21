@@ -20,119 +20,51 @@ var drive2 = {
     },
     init: function () {
         drive2.toolbar.init();
-        drive2.subscribtion.init();
-        drive2.like.init();
+        drive2.automation.init();
     },
     automation: {
         selectors: {
             "Автолайки": '.c-like__button',
             "Автоподписки": '.c-button--subs',
         },
-        buttons: [],
-        intervals: [],
-        startButtons: [],
-        stopButtons: [],
-        start: function (selector) {},
-        stop: function (selector) {},
-        init: function () {
-            for (var i = 0; i < this.selectors.length; i++) {
-                var selector = this.selectors[i];
-                drive2.automation.startButtons[] = drive2.getId();
-                        drive2.like.btnOffId = drive2.getId();
-                drive2.toolbar.createLink(drive2.like.btnOnId, 'Включить ' + selector.name, () => {
-                    drive2.automation.start(selector);
-                });
-                drive2.toolbar.createLink(drive2.like.btnOffId, 'Выключить ' + selector.name, () => {
-                    drive2.automation.stop(selector);
-                });
-                $("#" + drive2.like.btnOffId).hide();
-            }
-        },
-    },
-    like: {
-        btnLikeSelector: '.c-like__button',
-        buttons: [],
-        counter: 0,
-        stopped: false,
-        btnOnId: undefined,
-        btnOffId: undefined,
-        interval: undefined,
-        start: function () {
-            $("#" + drive2.like.btnOnId).hide();
-            $("#" + drive2.like.btnOffId).show();
-            drive2.like.interval = setInterval(() => {
-                if (drive2.like.counter >= $(drive2.like.buttons).length - 1) {
-                    drive2.like.buttons = $(drive2.like.btnLikeSelector);
+        buttons: {},
+        intervals: {},
+        counters: {},
+        startButtons: {},
+        stopButtons: {},
+        start: function (selectorName) {
+            $("#" + drive2.automation.startButtons[selectorName]).hide();
+            $("#" + drive2.automation.stopButtons[selectorName]).show();
+            drive2.automation.intervals[selectorName] = setInterval(() => {
+                if (drive2.automation.counters[selectorName] >= $(drive2.automation.buttons[selectorName]).length - 1) {
+                    drive2.automation.buttons[selectorName] = $(drive2.automation.selectors[selectorName]);
                 }
-                $(drive2.like.buttons[drive2.like.counter]).click();
+                $(drive2.automation.buttons[selectorName][drive2.automation.counters[selectorName]]).click();
                 $('html, body').animate({
-                    scrollTop: $(drive2.like.buttons[drive2.like.counter]).offset().top
-                }, 300);
-                drive2.like.counter++;
+                    scrollTop: $(drive2.automation.buttons[selectorName][drive2.automation.counters[selectorName]]).offset().top - 100
+                }, 0);
+                drive2.automation.counters[selectorName]++;
             }, 500);
         },
-        stop: function () {
-            $("#" + drive2.like.btnOnId).show();
-            $("#" + drive2.like.btnOffId).hide();
-            clearInterval(drive2.like.interval);
+        stop: function (selectorName) {
+            $("#" + drive2.automation.startButtons[selectorName]).show();
+            $("#" + drive2.automation.stopButtons[selectorName]).hide();
+            clearInterval(drive2.automation.intervals[selectorName]);
         },
         init: function () {
-            drive2.like.btnOnId = drive2.getId();
-            drive2.toolbar.createLink(drive2.like.btnOnId, 'Включить автолайки', function () {
-                drive2.like.start();
+            $.each(drive2.automation.selectors, function (index, selector) {
+                drive2.automation.startButtons[index] = drive2.getId();
+                drive2.automation.stopButtons[index] = drive2.getId();
+                drive2.toolbar.createLink(drive2.automation.startButtons[index], 'Включить ' + index, () => {
+                    drive2.automation.start(index);
+                });
+                drive2.toolbar.createLink(drive2.automation.stopButtons[index], 'Выключить ' + index, () => {
+                    drive2.automation.stop(index);
+                });
+                $("#" + drive2.automation.stopButtons[index]).hide();
+                drive2.automation.counters[index] = 0;
+                drive2.automation.buttons[index] = [];
             });
-            drive2.like.btnOffId = drive2.getId();
-            drive2.toolbar.createLink(drive2.like.btnOffId, 'Выключить автолайки', function () {
-                drive2.like.stop();
-            });
-            $("#" + drive2.like.btnOffId).hide();
-        }
-    },
-    subscribtion: {
-        btnSubscriptionSelector: '.c-button--subs',
-        buttons: [],
-        counter: 0,
-        stopped: false,
-        btnOnId: undefined,
-        btnOffId: undefined,
-        start: function (init) {
-            if (init === true) {
-                $("#" + drive2.subscribtion.btnOnId).hide();
-                $("#" + drive2.subscribtion.btnOffId).show();
-                drive2.subscribtion.stopped = false;
-            }
-
-            if (drive2.subscribtion.counter >= $(drive2.subscribtion.buttons).length - 1) {
-                drive2.subscribtion.buttons = $(drive2.subscribtion.btnSubscriptionSelector);
-                drive2.subscribtion.start();
-            } else {
-                setTimeout(() => {
-                    $(drive2.subscribtion.buttons[drive2.subscribtion.counter]).click();
-                    $('html, body').animate({
-                        scrollTop: $(drive2.subscribtion.buttons[drive2.subscribtion.counter]).offset().top - 150
-                    }, 300);
-                    drive2.subscribtion.counter++;
-                    if (!drive2.subscribtion.stopped) {
-                        drive2.subscribtion.start();
-                    }
-                }, 350);
-            }
         },
-        stop: function () {
-            $("#" + drive2.subscribtion.btnOnId).show();
-            $("#" + drive2.subscribtion.btnOffId).hide();
-            drive2.subscribtion.stopped = true;
-        },
-        init: function () {
-            drive2.subscribtion.btnOnId = drive2.getId();
-            drive2.toolbar.createLink(drive2.subscribtion.btnOnId, 'Включить автоподписку', function () {
-                drive2.subscribtion.start(true);
-            });
-            drive2.subscribtion.btnOffId = drive2.getId();
-            drive2.toolbar.createLink(drive2.subscribtion.btnOffId, 'Выключить автоподписку', function () {
-                drive2.subscribtion.stop();
-            });
-            $("#" + drive2.subscribtion.btnOffId).hide();
-        }
     }
 };
