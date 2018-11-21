@@ -1,0 +1,16 @@
+{
+    "name": "drive2",
+    "version": "1.0",
+    "manifest_version": 2,
+    "content_scripts": [
+        {
+            "matches": ["http://drive2.ru/*", "https://drive2.ru/*","http://www.drive2.ru/*", "https://www.drive2.ru/*"],
+            "js": ["jquery.js", "background.js"],
+            "run_at": "document_idle"
+        }
+    ],
+    "web_accessible_resources": [
+        "/jquery.js",
+        "/drive2.js"        
+    ]
+}
