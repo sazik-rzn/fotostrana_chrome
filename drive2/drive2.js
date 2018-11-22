@@ -10,6 +10,10 @@ var drive2 = {
         init: function () {
             $('.l-body').append('<header class="l-header" data-role="sticky" style="bottom: 10px; background-color:black;"><r-yvnv class="c-top"><r-yvnv class="c-top__container"><r-yvnv class="c-top__wrapper"><r-yvnv id="customMenu" class="c-top__main-nav" data-slot="sitesearch.nav"><r-yvnv class="c-top-nav"><a class="c-top-nav__link" href="http://autogramm.ru" target="_blank">Autogramm(@agmm_channel)<span class="c-notification-bubble c-notification-bubble--top" >!</span></a></r-yvnv></r-yvnv></r-yvnv></r-yvnv></r-yvnv></header>');
         },
+        createHref:function(name, href){
+            var link = '<r-yvnv class="c-top-nav"><a href="'+href+'" target="_blank" class="c-top-nav__link" style="cursor:pointer;">' + name + '</a></r-yvnv>';
+            $(drive2.toolbar.selector).append(link);
+        },
         createLink: function (id, name, onclick) {
             var link = '<r-yvnv class="c-top-nav" id="' + id + '"><a class="c-top-nav__link" style="cursor:pointer;">' + name + '</a></r-yvnv>';
             $(drive2.toolbar.selector).append(link);
@@ -18,8 +22,9 @@ var drive2 = {
             });
         }
     },
-    init: function () {
+    init: function () {        
         drive2.toolbar.init();
+        drive2.toolbar.createHref("Перенести в autogramm", "http://autogramm.ru/drive?url="+encodeURIComponent(window.location.href)+"&force=true");
         drive2.automation.init();
     },
     automation: {
