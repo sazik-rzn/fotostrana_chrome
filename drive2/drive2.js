@@ -32,6 +32,9 @@ var drive2 = {
             "Автолайки": '.c-like__button',
             "Автоподписки": '.c-button--subs',
         },
+        limits:{
+			"Автоподписки": 50
+		},
         buttons: {},
         intervals: {},
         counters: {},
@@ -41,6 +44,9 @@ var drive2 = {
             $("#" + drive2.automation.startButtons[selectorName]).hide();
             $("#" + drive2.automation.stopButtons[selectorName]).show();
             drive2.automation.intervals[selectorName] = setInterval(() => {
+				if(drive2.automation.limits[selectorName]!==undefined && drive2.automation.counters[selectorName]>=drive2.automation.limits[selectorName]){
+					drive2.automation.stop(selectorName);
+				}
                 if (drive2.automation.counters[selectorName] >= $(drive2.automation.buttons[selectorName]).length - 1) {
                     drive2.automation.buttons[selectorName] = $(drive2.automation.selectors[selectorName]);
                 }
