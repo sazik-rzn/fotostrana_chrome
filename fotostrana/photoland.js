@@ -303,3 +303,4 @@ var photoland = {
         }
     }
 };
+photoland.init();
