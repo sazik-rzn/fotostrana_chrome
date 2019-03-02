@@ -34,7 +34,7 @@ var photoland = {
         this.registerInitFunction(this.litsoSOblogki.init);
         this.registerInitFunction(this.ludi.init);
         this.registerInitFunction(this.goryatsieSerdtsa.init);
-        //this.registerInitFunction(this.user.init);
+        this.registerInitFunction(this.user.init);
         this.registerInitFunction(this.putKSlave.init);
 
         $.each(this.init_functions, function (index, value) {
